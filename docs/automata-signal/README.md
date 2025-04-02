@@ -22,12 +22,12 @@ Automata-Signal은 확장성 있는 멀티채널 메시징 플랫폼으로, 다�
 ## 문서 가이드
 
 ### 아키텍처 문서
-- [아키텍처 개요](architecture-overview.md) - 시스템 아키텍처 전체 개요
-- [시스템 아키텍처](architecture/system-architecture.md) - 상세 시스템 아키텍처
-- [Elixir 노드 아키텍처](architecture/elixir-node-architecture.md) - Elixir 노드 내부 구조
-- [데이터 모델](architecture/data-model.md) - 데이터베이스 모델 및 스키마
-- [SDK 아키텍처](architecture/sdk-architecture.md) - SDK 설계 및 구조
-- [배포 아키텍처](architecture/deployment-architecture.md) - 분산 배포 구조
+- [아키텍처 개요](architectures/overview.md) - 시스템 아키텍처 전체 개요
+- [시스템 아키텍처](architectures/system-architecture.md) - 상세 시스템 아키텍처
+- [Elixir 노드 아키텍처](architectures/elixir-node-architecture.md) - Elixir 노드 내부 구조
+- [데이터 모델](architectures/data-model.md) - 데이터베이스 모델 및 스키마
+- [SDK 아키텍처](architectures/sdk-architecture.md) - SDK 설계 및 구조
+- [배포 아키텍처](architectures/deployment-architecture.md) - 분산 배포 구조
 
 ### 사전 및 정의
 - [구독 상태 코드](dictionaries/subscription-states.md) - 구독 상태 정의 및 코드
