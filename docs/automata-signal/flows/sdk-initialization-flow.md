@@ -1,9 +1,15 @@
 # [FLOW-001] SDK 초기화 및 사용자 식별 흐름
 
-- 문서 ID: FLOW-001
-- 버전: 1.0
-- 작성일: 2025-04-02
-- 상태: 검토 중
+| 버전 | 날짜       | 변경 내용      |
+| ---- | ---------- | -------------- |
+| 1.0  | 2025-04-02 | 최초 문서 작성 |
+
+## 관련 문서
+
+- [ARCH-004] SDK 아키텍처
+- [DICT-001] 구독 상태 코드 사전
+- [API-001] 사용자 및 구독 API 명세
+- [FLOW-002] 메시지 처리 흐름
 
 ## 요약
 
@@ -762,16 +768,3 @@ bool isIdentified = await AutomataSignal().isUserIdentified();
 List<SubscriptionInfo> subscriptions = await AutomataSignal().getSubscriptions();
 String? pushToken = await AutomataSignal().getPushToken();
 ```
-
-## 관련 문서
-
-- [ARCH-004] SDK 아키텍처
-- [DICT-001] 구독 상태 코드 사전
-- [API-001] 사용자 및 구독 API 명세
-- [FLOW-002] 메시지 처리 흐름
-
-## 변경 이력
-
-| 버전 | 날짜       | 변경 내용      |
-| ---- | ---------- | -------------- |
-| 1.0  | 2025-04-02 | 최초 문서 작성 |

@@ -10,11 +10,11 @@
 - 데이터베이스: PostgreSQL (Oban 작업 큐 포함)
 - 클라이언트: Flutter
 - 멀티채널 지원:
-    - 푸시 알림: Pigeon (FCM/APNS 클라이언트)
-    - 이메일: Swoosh (지원 예정)
-    - SMS: 다양한 SMS 게이트웨이 (지원 예정)
-    - 카카오 알림톡: 카카오 비즈니스 API (지원 예정)
-    - 인앱 메시지: SDK 내장 컴포넌트 (지원 예정)
+  - 푸시 알림: Pigeon (FCM/APNS 클라이언트)
+  - 이메일: Swoosh (지원 예정)
+  - SMS: 다양한 SMS 게이트웨이 (지원 예정)
+  - 카카오 알림톡: 카카오 비즈니스 API (지원 예정)
+  - 인앱 메시지: SDK 내장 컴포넌트 (지원 예정)
 - 배포: fly.io (글로벌 분산 배포)
 
 ### 추가 정보
@@ -30,7 +30,7 @@
 
 - 초점: 지정된 코드만 수정하고, 다른 부분은 그대로 두세요.
 - 단계: 큰 작업을 단계로 나누고, 각 단계 후에는 승인을 기다리세요.
-- 계획: 큰 변경 전에는 설계 및 작업개요 문서 [이슈명]_design.md 와 구현 계획 문서 [이슈명]_plan.md를 작성하고 확인을 기다리세요.
+- 계획: 큰 변경 전에는 설계 및 작업개요 문서 [이슈명]\_design.md 와 구현 계획 문서 [이슈명]\_plan.md를 작성하고 확인을 기다리세요.
 - 추적: 완료된 작업은 progress.md에 기록하고, 다음 단계는 TODO.txt에 기록하세요.
 
 ### 고급 워크플로우
@@ -64,31 +64,31 @@
 ### Umbrella 앱 구조
 
 - **automata/** - Elixir Umbrella 프로젝트 루트
-    - **docs/** - 프로젝트 문서
-        - **architecture/** - 시스템 아키텍처 설계 문서
-        - **guides/** - 개발자 가이드 및 튜토리얼
-        - **runbooks/** - 운영 매뉴얼 및 장애 복구 절차
-        - **components/** - 컴포넌트별 상세 문서
-        - **api/** - API 명세 및 사용 예제
-    - **apps/** - Umbrella 하위 애플리케이션
-        - **automata_signal/** - 통합 메시징 서비스 앱
-            - **lib/** - 소스 코드
-                - **automata_signal/** - 비즈니스 로직
-                    - **resources/** - Ash 리소스 정의
-                    - **services/** - 서비스 로직 모듈
-                    - **workers/** - ash_oban 비동기 작업자
-                    - **adapters/** - 채널별 어댑터 모듈
-                    - **templates/** - 메시지 템플릿 시스템
-                    - **campaigns/** - 캠페인 관리 모듈
-                - **automata_signal_web/** - 웹 인터페이스
-                    - **controllers/** - API 엔드포인트 처리
-                    - **views/** - 응답 데이터 포맷팅
-            - **priv/** - 정적 파일 및 마이그레이션
-            - **test/** - 단위 및 통합 테스트
-            - **client/** - Flutter 모바일 클라이언트
-        - **automata_admin/** - 관리자 인터페이스 앱
-        - **automata_analytics/** - 데이터 분석 앱
-    - **config/** - Umbrella 공통 설정
+  - **docs/** - 프로젝트 문서
+    - **architecture/** - 시스템 아키텍처 설계 문서
+    - **guides/** - 개발자 가이드 및 튜토리얼
+    - **runbooks/** - 운영 매뉴얼 및 장애 복구 절차
+    - **components/** - 컴포넌트별 상세 문서
+    - **api/** - API 명세 및 사용 예제
+  - **apps/** - Umbrella 하위 애플리케이션
+    - **automata_signal/** - 통합 메시징 서비스 앱
+      - **lib/** - 소스 코드
+        - **automata_signal/** - 비즈니스 로직
+          - **resources/** - Ash 리소스 정의
+          - **services/** - 서비스 로직 모듈
+          - **workers/** - ash_oban 비동기 작업자
+          - **adapters/** - 채널별 어댑터 모듈
+          - **templates/** - 메시지 템플릿 시스템
+          - **campaigns/** - 캠페인 관리 모듈
+        - **automata_signal_web/** - 웹 인터페이스
+          - **controllers/** - API 엔드포인트 처리
+          - **views/** - 응답 데이터 포맷팅
+      - **priv/** - 정적 파일 및 마이그레이션
+      - **test/** - 단위 및 통합 테스트
+      - **client/** - Flutter 모바일 클라이언트
+    - **automata_admin/** - 관리자 인터페이스 앱
+    - **automata_analytics/** - 데이터 분석 앱
+  - **config/** - Umbrella 공통 설정
 
 ### 명명 규칙
 

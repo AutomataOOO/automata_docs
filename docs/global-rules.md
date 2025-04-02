@@ -3,11 +3,11 @@
 ## 1️⃣ 구현 작업 원칙
 
 - SOLID 원칙을 사용해서 구현하세요:
-    - 단일 책임 원칙 (Single Responsibility Principle)
-    - 개방-폐쇄 원칙 (Open-Closed Principle)
-    - 리스코프 치환 원칙 (Liskov Substitution Principle)
-    - 인터페이스 분리 원칙 (Interface Segregation Principle)
-    - 의존성 역전 원칙 (Dependency Inversion Principle)
+  - 단일 책임 원칙 (Single Responsibility Principle)
+  - 개방-폐쇄 원칙 (Open-Closed Principle)
+  - 리스코프 치환 원칙 (Liskov Substitution Principle)
+  - 인터페이스 분리 원칙 (Interface Segregation Principle)
+  - 의존성 역전 원칙 (Dependency Inversion Principle)
 - TDD로 구현하세요: 테스트 주도 개발 방식으로 먼저 테스트를 작성하고 구현하세요.
 - Clean Architecture를 사용해서 구현하세요: 책임과 관심사를 명확히 분리하여 구현하세요.
 - 영어로 코드 및 변수 명을 작성하되, 주석과 문서는 한국어로 작성하세요.
