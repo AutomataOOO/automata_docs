@@ -1,21 +1,23 @@
 # [FLOW-001] SDK 초기화 및 사용자 식별 흐름
 
-문서 ID: FLOW-001  
-버전: 1.0  
-작성일: 2025-04-02  
-상태: 검토 중  
-작성자: SDK팀
+- 문서 ID: FLOW-001
+- 버전: 1.0
+- 작성일: 2025-04-02
+- 상태: 검토 중
 
 ## 요약
+
 본 문서는 Automata-Signal SDK의 초기화 과정, 사용자 식별(로그인/로그아웃), 그리고 다양한 메시징 채널 구독 관리에 대한 흐름을 설명합니다. SDK와 서버 간의 상호작용을 포함한 전체 프로세스를 상세히 다룹니다.
 
 ## 대상 독자
+
 - 모바일 앱 개발자
 - SDK 통합 담당자
 - 백엔드 개발자
 - QA 팀
 
 ## 선행 지식
+
 - [ARCH-004] SDK 아키텍처
 - [DICT-001] 구독 상태 코드 사전
 - [API-001] 사용자 및 구독 API 명세
@@ -32,7 +34,7 @@ sequenceDiagram
 
     App->>SDK: initialize(APP_ID, config)
     SDK->>SDK: 디바이스 정보 수집
-    
+
     alt 푸시 알림 자동 등록 (config.autoRegisterPush)
         SDK->>SDK: 푸시 토큰 요청
         SDK->>API: 디바이스 등록 요청
@@ -41,7 +43,7 @@ sequenceDiagram
         DB-->>Server: 구독 ID 반환
         Server-->>API: 구독 ID 응답
         API-->>SDK: 구독 ID 저장
-        
+
         alt 자동 권한 요청 (config.autoPromptPermission)
             SDK->>App: 푸시 알림 권한 요청
             App-->>SDK: 권한 상태 반환
@@ -50,7 +52,7 @@ sequenceDiagram
             Server->>DB: Subscription 상태 업데이트
         end
     end
-    
+
     SDK-->>App: 초기화 완료 콜백
 
     Note over App,SDK: 사용자 로그인 시
@@ -126,14 +128,14 @@ void main() async {
 
 `AutomataSignalConfig` 옵션:
 
-| 옵션 | 타입 | 기본값 | 설명 |
-| --- | --- | --- | --- |
-| autoRegisterPush | bool | true | 자동으로 푸시 알림 토큰 등록 |
-| autoPromptPermission | bool | true | 자동으로 푸시 알림 권한 요청 |
-| foregroundNotificationsEnabled | bool | true | 앱 포그라운드 상태에서도 알림 표시 |
-| enableInAppMessages | bool | true | 인앱 메시지 활성화 (지원 예정) |
-| defaultLanguage | String | null | 기본 언어 설정 |
-| trackMessageEvents | bool | true | 메시지 수신/열람 등 이벤트 자동 추적 |
+| 옵션                           | 타입   | 기본값 | 설명                                 |
+| ------------------------------ | ------ | ------ | ------------------------------------ |
+| autoRegisterPush               | bool   | true   | 자동으로 푸시 알림 토큰 등록         |
+| autoPromptPermission           | bool   | true   | 자동으로 푸시 알림 권한 요청         |
+| foregroundNotificationsEnabled | bool   | true   | 앱 포그라운드 상태에서도 알림 표시   |
+| enableInAppMessages            | bool   | true   | 인앱 메시지 활성화 (지원 예정)       |
+| defaultLanguage                | String | null   | 기본 언어 설정                       |
+| trackMessageEvents             | bool   | true   | 메시지 수신/열람 등 이벤트 자동 추적 |
 
 ### 2.2 내부 초기화 단계
 
@@ -159,28 +161,28 @@ SDK의 내부 초기화 과정은 다음 순서로 진행됩니다:
 Future<void> _initialize(String appId, AutomataSignalConfig config) async {
   _appId = appId;
   _config = config;
-  
+
   // 디바이스 정보 수집
   _deviceInfo = await _collectDeviceInfo();
-  
+
   // 구독 관리자 초기화
   _subscriptionManager = SubscriptionManager(
     appId: appId,
     deviceInfo: _deviceInfo
   );
-  
+
   // 사용자 관리자 초기화
   _userManager = UserManager(appId: appId);
-  
+
   // 메시지 관리자 초기화
   _messageManager = MessageManager(
     appId: appId,
     trackEvents: config.trackMessageEvents
   );
-  
+
   // 저장된 사용자 ID가 있는 경우 자동 복원
   await _restoreUserIfAvailable();
-  
+
   // 자동 푸시 알림 등록
   if (config.autoRegisterPush) {
     await _registerPushNotifications(
@@ -210,21 +212,21 @@ Future<void> _registerPushNotifications({bool promptPermission = true}) async {
   } else if (Platform.isAndroid) {
     await _initializeFCM();
   }
-  
+
   // 토큰 요청
   String? token = await _getPushToken();
   if (token != null) {
     // 토큰을 서버에 등록
     await _subscriptionManager.registerPushSubscription(token);
   }
-  
+
   // 권한 요청
   if (promptPermission) {
     bool granted = await _requestNotificationPermission();
     // 권한 상태 서버에 업데이트
     if (token != null) {
       await _subscriptionManager.updateSubscriptionStatus(
-        token, 
+        token,
         granted ? 1 : -22  // -22: 수동 구독 취소
       );
     }
@@ -241,7 +243,7 @@ SDK 초기화 중 서버로 보내는 API 요청 예시:
 ```json
 {
   "application_id": "YOUR_APP_ID",
-  "type": "iOSPush",  // 또는 "AndroidPush"
+  "type": "iOSPush", // 또는 "AndroidPush"
   "token": "device_push_token_here",
   "device_info": {
     "device_model": "iPhone 13",
@@ -276,7 +278,7 @@ Future<void> onUserLogin(String userId) async {
   try {
     await AutomataSignal().login(userId);
     print('User identified successfully');
-    
+
     // 로그인 후 인앱 메시지 확인 (지원 예정)
     await AutomataSignal().fetchInAppMessages();
   } catch (error) {
@@ -299,7 +301,7 @@ Future<void> identifyUser(String externalId) async {
   if (externalId.isEmpty) {
     throw Exception('User ID cannot be empty');
   }
-  
+
   try {
     // 서버에 사용자 식별 요청
     final response = await _apiClient.post(
@@ -310,17 +312,17 @@ Future<void> identifyUser(String externalId) async {
         'subscriptions': await _subscriptionManager.getSubscriptionIds()
       }
     );
-    
+
     if (response['status'] == 'success') {
       // 로컬에 사용자 ID 저장
       _externalId = externalId;
       _automataId = response['user_id'];
       await _storage.setString('user_external_id', externalId);
-      
+
       _isIdentified = true;
       return;
     }
-    
+
     throw Exception('Failed to identify user: ${response['error']}');
   } catch (error) {
     _isIdentified = false;
@@ -343,9 +345,9 @@ Future<void> identifyUser(String externalId) async {
 def identify_user(params) do
   Ash.transaction(fn ->
     # 사용자 찾기 또는 생성
-    user = 
+    user =
       case find_user_by_external_id(params.application_id, params.external_id) do
-        nil -> 
+        nil ->
           # 새 사용자 생성
           User.create_changeset(%{
             external_id: params.external_id,
@@ -353,17 +355,17 @@ def identify_user(params) do
             last_active_at: DateTime.utc_now()
           })
           |> Ash.create!()
-          
+
         existing_user ->
           # 기존 사용자 업데이트
           existing_user
           |> User.update_changeset(%{last_active_at: DateTime.utc_now()})
           |> Ash.update!()
       end
-    
+
     # 구독과 사용자 연결
     link_subscriptions_to_user(user.id, params.subscriptions)
-    
+
     # 성공 응답 반환
     %{
       status: "success",
@@ -402,7 +404,7 @@ Future<void> logoutUser() async {
   if (!_isIdentified) {
     return; // 이미 로그아웃 상태
   }
-  
+
   try {
     // 서버에 로그아웃 요청
     await _apiClient.post(
@@ -412,15 +414,15 @@ Future<void> logoutUser() async {
         'subscriptions': await _subscriptionManager.getSubscriptionIds()
       }
     );
-    
+
     // 로컬 사용자 정보 제거
     _externalId = null;
     _automataId = null;
     await _storage.remove('user_external_id');
-    
+
     // 인앱 메시지 캐시 제거 (지원 예정)
     await _inAppMessageManager?.clearCache();
-    
+
     _isIdentified = false;
   } catch (error) {
     // 오류는 기록하되, 로컬 로그아웃은 진행
@@ -429,7 +431,7 @@ Future<void> logoutUser() async {
     _automataId = null;
     await _storage.remove('user_external_id');
     _isIdentified = false;
-    
+
     rethrow;
   }
 }
@@ -449,7 +451,7 @@ def logout_user(params) do
   Ash.transaction(fn ->
     # 구독과 사용자 연결 해제
     unlink_subscriptions_from_user(params.subscriptions)
-    
+
     # 성공 응답 반환
     %{status: "success"}
   end)
@@ -458,11 +460,11 @@ end
 defp unlink_subscriptions_from_user(subscription_ids) do
   Enum.each(subscription_ids, fn subscription_id ->
     subscription = Subscription.get!(subscription_id)
-    
+
     subscription
     |> Subscription.update_changeset(%{user_id: nil})
     |> Ash.update!()
-    
+
     # 구독 상태 변경 이벤트 기록
     SubscriptionEvent.create_changeset(%{
       subscription_id: subscription.id,
@@ -608,16 +610,19 @@ POST /api/v1/subscriptions/tags
 SDK는 다음 데이터를 로컬에 저장합니다:
 
 1. **구독 정보**:
+
    - 구독 ID
    - 채널 유형
    - 토큰 값
    - 구독 상태
 
 2. **사용자 정보**:
+
    - 외부 사용자 ID (앱 재시작 시 자동 복원용)
    - Automata 사용자 ID
 
 3. **메시지 추적 데이터**:
+
    - 처리 중인 메시지 ID
    - 수신 확인 대기 중인 메시지 큐
    - 네트워크 연결 없을 때 캐시된 이벤트
@@ -642,10 +647,10 @@ Future<Map<String, SubscriptionInfo>> _getStoredSubscriptions() async {
   if (data == null || data.isEmpty) {
     return {};
   }
-  
+
   try {
     final Map<String, dynamic> jsonData = jsonDecode(data);
-    return jsonData.map((key, value) => 
+    return jsonData.map((key, value) =>
       MapEntry(key, SubscriptionInfo.fromJson(value))
     );
   } catch (e) {
@@ -660,11 +665,13 @@ Future<Map<String, SubscriptionInfo>> _getStoredSubscriptions() async {
 SDK는 네트워크 오류나 서버 문제 시 다음과 같은 전략을 사용합니다:
 
 1. **지수 백오프 재시도**:
+
    - 초기 재시도 간격: 1초
    - 최대 재시도 간격: 60초
    - 최대 재시도 횟수: 5회
 
 2. **오프라인 작업 큐**:
+
    - 네트워크 연결이 없을 때 작업 큐에 저장
    - 연결 복원 시 큐의 작업 처리
 
@@ -679,17 +686,17 @@ SDK는 네트워크 오류나 서버 문제 시 다음과 같은 전략을 사�
 Future<T> _retryableRequest<T>(Future<T> Function() request) async {
   int attempt = 0;
   Duration delay = Duration(seconds: 1);
-  
+
   while (true) {
     try {
       return await request();
     } catch (e) {
       attempt++;
-      
+
       if (!_shouldRetry(e) || attempt >= 5) {
         rethrow;
       }
-      
+
       // 지수 백오프 대기
       await Future.delayed(delay);
       delay = Duration(seconds: min(60, delay.inSeconds * 2));
@@ -701,11 +708,11 @@ bool _shouldRetry(dynamic error) {
   if (error is NetworkError) {
     return true;
   }
-  
+
   if (error is ServerError && error.statusCode >= 500) {
     return true;
   }
-  
+
   return false;
 }
 ```
@@ -715,10 +722,12 @@ bool _shouldRetry(dynamic error) {
 SDK 구현 시 다음과 같은 보안 사항을 고려합니다:
 
 1. **인증 토큰 보안**:
+
    - 토큰은 앱의 안전한 저장소에 암호화하여 저장
    - 메모리에서 필요한 시간만 유지
 
 2. **API 통신 보안**:
+
    - 모든 API 통신은 HTTPS/TLS 사용
    - 인증 헤더 및 토큰을 통한 API 요청 인증
 
@@ -731,6 +740,7 @@ SDK 구현 시 다음과 같은 보안 사항을 고려합니다:
 SDK는 다음과 같은 디버깅 지원을 제공합니다:
 
 1. **로그 레벨 설정**:
+
    - VERBOSE: 상세한 디버깅 정보
    - DEBUG: 디버깅 정보
    - INFO: 일반 정보 (기본값)
@@ -762,6 +772,6 @@ String? pushToken = await AutomataSignal().getPushToken();
 
 ## 변경 이력
 
-| 버전 | 날짜 | 변경 내용 | 작성자 |
-| --- | --- | --- | --- |
-| 1.0 | 2025-04-02 | 최초 문서 작성 | SDK팀 |
+| 버전 | 날짜       | 변경 내용      |
+| ---- | ---------- | -------------- |
+| 1.0  | 2025-04-02 | 최초 문서 작성 |

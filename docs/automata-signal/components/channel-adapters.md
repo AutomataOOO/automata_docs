@@ -1,21 +1,23 @@
 # [COMP-002] 채널 어댑터 시스템
 
-문서 ID: COMP-002  
-버전: 1.0  
-작성일: 2025-04-02  
-상태: 확정  
-작성자: 아키텍처팀
+- 문서 ID: COMP-002
+- 버전: 1.0
+- 작성일: 2025-04-02
+- 상태: 확정
 
 ## 요약
+
 본 문서는 Automata-Signal의 채널 어댑터 시스템에 대한 상세 설계와 구현 방법을 설명합니다. 채널 어댑터는 다양한 메시징 채널(푸시 알림, 이메일, SMS 등)과의 통합을 담당하는 모듈화된 컴포넌트입니다. 확장 가능하고 유지보수가 용이한 설계를 통해 새로운 채널을 쉽게 추가할 수 있습니다.
 
 ## 대상 독자
+
 - 백엔드 개발자
 - 시스템 아키텍트
 - 채널 통합 담당자
 - QA 엔지니어
 
 ## 선행 지식
+
 - [ARCH-001] 아키텍처 개요
 - [DICT-001] 구독 상태 코드 사전
 - [DICT-003] 메시지 상태 및 전이 규칙
@@ -107,7 +109,7 @@ classDiagram
     ChannelAdapter <|.. SMSAdapter
     ChannelAdapter <|.. KakaoAdapter
     ChannelAdapter <|.. InAppAdapter
-    
+
     AdapterFactory --> ChannelAdapter
 ```
 
@@ -127,7 +129,7 @@ defmodule AutomataSignal.Adapters.ChannelAdapter do
     {:ok, status :: atom()} | {:error, reason :: atom()}
 
   @callback map_error(error :: any()) ::
-    {:permanent, reason :: atom(), details :: map()} | 
+    {:permanent, reason :: atom(), details :: map()} |
     {:temporary, reason :: atom(), details :: map()}
 end
 ```
@@ -140,7 +142,7 @@ end
 
 - **입력**: `Message` 구조체 (제목, 본문, 데이터, 구독 정보 등)
 - **출력**: 성공 시 `{:ok, response_data}`, 실패 시 `{:error, error_data}`
-- **책임**: 
+- **책임**:
   - 메시지를 채널에 맞는 형식으로 변환
   - 외부 서비스 API 호출
   - 응답 처리 및 결과 반환
@@ -240,7 +242,7 @@ defmodule AutomataSignal.Adapters.PushAdapter do
 
   @impl true
   def get_status(message_id) do
-    # 대부분의 푸시 서비스는 상태 조회 API를 제공하지 않으므로 
+    # 대부분의 푸시 서비스는 상태 조회 API를 제공하지 않으므로
     # 로컬 상태 저장소에서 조회
     {:error, :not_supported}
   end
@@ -290,7 +292,7 @@ defmodule AutomataSignal.Adapters.PushAdapter do
   end
 
   # 내부 헬퍼 메서드
-  
+
   defp send_ios_message(%Message{} = message) do
     notification = %{
       token: message.subscription.token,
@@ -301,11 +303,11 @@ defmodule AutomataSignal.Adapters.PushAdapter do
       },
       custom: message.data
     }
-    
+
     case Pigeon.APNS.push(notification, get_apns_config(message.subscription)) do
-      {:ok, data} -> 
+      {:ok, data} ->
         {:ok, %{provider_message_id: data.id}}
-      {:error, reason} -> 
+      {:error, reason} ->
         {:error, reason}
     end
   end
@@ -319,11 +321,11 @@ defmodule AutomataSignal.Adapters.PushAdapter do
       },
       data: message.data
     }
-    
+
     case Pigeon.FCM.push(notification) do
-      {:ok, data} -> 
+      {:ok, data} ->
         {:ok, %{provider_message_id: data.id}}
-      {:error, reason} -> 
+      {:error, reason} ->
         {:error, reason}
     end
   end
@@ -386,7 +388,7 @@ defmodule AutomataSignal.Adapters.EmailAdapter do
   end
 
   # 내부 헬퍼 메서드
-  
+
   defp valid_email?(email) do
     # 간단한 이메일 형식 검증 로직
     Regex.match?(~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, email)
@@ -440,7 +442,7 @@ defmodule AutomataSignal.Adapters.SMSAdapter do
   end
 
   # 내부 헬퍼 메서드
-  
+
   defp valid_phone_number?(phone) do
     # 간단한 전화번호 형식 검증 로직
     Regex.match?(~r/^\+?[0-9]{10,15}$/, phone)
@@ -491,7 +493,7 @@ defmodule AutomataSignal.Adapters.KakaoAdapter do
   end
 
   # 내부 헬퍼 메서드
-  
+
   defp valid_template_variables?(data) do
     # 템플릿 변수 검증 로직
     # 향후 구현 예정
@@ -551,7 +553,7 @@ end
 defmodule AutomataSignal.Adapters.AdapterFactory do
   alias AutomataSignal.Resources.Subscription
   alias AutomataSignal.Resources.Message
-  
+
   alias AutomataSignal.Adapters.PushAdapter
   alias AutomataSignal.Adapters.EmailAdapter
   alias AutomataSignal.Adapters.SMSAdapter
@@ -604,7 +606,7 @@ defmodule AutomataSignal.Services.MessageService do
   def send_message(%Message{} = message) do
     # 메시지에 맞는 어댑터 선택
     adapter = AdapterFactory.get_adapter_for_message(message)
-    
+
     # 메시지 검증
     case adapter.validate_message(message) do
       :ok ->
@@ -613,12 +615,12 @@ defmodule AutomataSignal.Services.MessageService do
           {:ok, response} ->
             # 성공 처리
             update_message_status(message, :successful, response)
-            
+
           {:error, error} ->
             # 오류 처리
             handle_send_error(message, adapter, error)
         end
-        
+
       {:error, reason, details} ->
         # 검증 오류 처리
         update_message_status(message, :failed, %{
@@ -643,7 +645,7 @@ defmodule AutomataSignal.Services.MessageService do
           error_reason: reason,
           error_details: details
         })
-        
+
       {:temporary, reason, details} ->
         # 일시적 오류 - 재시도 스케줄링
         update_message_status(message, :errored, %{
@@ -841,17 +843,17 @@ defmodule AutomataSignal.Adapters.PushAdapterTest do
       body: "Test Body",
       subscription: %Subscription{type: :iOSPush, token: "valid_token"}
     }
-    
+
     assert PushAdapter.validate_message(message) == :ok
   end
 
   # 오류 매핑 테스트
   test "map_error/1 correctly maps APNS errors" do
     error = %{reason: "BadDeviceToken"}
-    
+
     assert PushAdapter.map_error(error) == {
-      :permanent, 
-      :invalid_token, 
+      :permanent,
+      :invalid_token,
       %{code: "BadDeviceToken", subscription_status: -10}
     }
   end
@@ -906,6 +908,6 @@ end
 
 ## 변경 이력
 
-| 버전 | 날짜 | 변경 내용 | 작성자 |
-| --- | --- | --- | --- |
-| 1.0 | 2025-04-02 | 최초 문서 작성 | 아키텍처팀 |
+| 버전 | 날짜       | 변경 내용      |
+| ---- | ---------- | -------------- |
+| 1.0  | 2025-04-02 | 최초 문서 작성 |

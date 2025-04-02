@@ -1,21 +1,23 @@
 # [FLOW-002] 메시지 처리 흐름
 
-문서 ID: FLOW-002  
-버전: 1.0  
-작성일: 2025-04-02  
-상태: 검토 중  
-작성자: 메시징 플랫폼팀
+- 문서 ID: FLOW-002
+- 버전: 1.0
+- 작성일: 2025-04-02
+- 상태: 검토 중
 
 ## 요약
+
 본 문서는 Automata-Signal 시스템에서 메시지가 생성되고 처리되는 전체 흐름을 설명합니다. 개별 메시지 발송, 템플릿 기반 메시지, 대량 캠페인 등 다양한 메시지 처리 경로와 각 단계별 상호작용을 포함합니다.
 
 ## 대상 독자
+
 - 개발팀
 - 시스템 엔지니어
 - QA 팀
 - 운영팀
 
 ## 선행 지식
+
 - [DICT-003] 메시지 상태 및 전이 규칙
 - [DICT-001] 구독 상태 코드 사전
 - [ARCH-001] 아키텍처 개요
@@ -216,7 +218,7 @@ def schedule_delivery(message) do
   %{id: message.id}
   |> MessageWorker.new()
   |> Oban.insert!()
-  
+
   message
 end
 ```
@@ -236,23 +238,23 @@ defmodule AutomataSignal.Workers.MessageWorker do
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"id" => message_id}}) do
     message = AutomataSignal.Messages.get_message!(message_id)
-    
+
     # 구독 타입에 따라 적절한 어댑터 선택
     adapter = get_adapter_for_channel(message.subscription.type)
-    
+
     # 어댑터를 통해 메시지 전송
     case adapter.send_message(message) do
       {:ok, response} ->
         # 성공 처리
         AutomataSignal.Messages.mark_as_sent(message, response)
         :ok
-        
+
       {:error, reason} ->
         # 오류 처리 (일시적/영구적 오류 구분)
         handle_send_error(message, reason)
     end
   end
-  
+
   defp get_adapter_for_channel(:iOSPush), do: AutomataSignal.Adapters.PushAdapter
   defp get_adapter_for_channel(:AndroidPush), do: AutomataSignal.Adapters.PushAdapter
   # ... 다른 채널 어댑터 ...
@@ -292,11 +294,11 @@ defmodule AutomataSignal.Adapters.PushAdapter do
       },
       custom: message.data
     }
-    
+
     case Pigeon.APNS.push(notification, get_apns_config(message.subscription)) do
-      {:ok, data} -> 
+      {:ok, data} ->
         {:ok, %{provider_message_id: data.id}}
-      {:error, reason} -> 
+      {:error, reason} ->
         mapped_error = map_apns_error(reason)
         {:error, mapped_error}
     end
@@ -312,16 +314,16 @@ defmodule AutomataSignal.Adapters.PushAdapter do
       },
       data: message.data
     }
-    
+
     case Pigeon.FCM.push(notification) do
-      {:ok, data} -> 
+      {:ok, data} ->
         {:ok, %{provider_message_id: data.id}}
-      {:error, reason} -> 
+      {:error, reason} ->
         mapped_error = map_fcm_error(reason)
         {:error, mapped_error}
     end
   end
-  
+
   # ... 기타 헬퍼 함수 ...
 end
 ```
@@ -360,7 +362,7 @@ defp create_message_event(message, event_type, metadata) do
     metadata: metadata
   })
   |> Ash.create!()
-  
+
   message
 end
 ```
@@ -411,7 +413,7 @@ void _handlePushClicked(Map<String, dynamic> message) {
     }).catchError((error) {
       print('Failed to track message conversion: $error');
     });
-    
+
     // 메시지 액션 처리
     _handleMessageAction(message['data']);
   }
@@ -525,6 +527,7 @@ config :automata_signal, Oban,
 메시지 처리 중 발생하는 오류는 다음과 같이 분류됩니다:
 
 1. **영구적 오류**: 다시 시도해도 해결되지 않는 오류
+
    - 유효하지 않은 토큰/주소
    - 차단된 사용자
    - 구독 취소된 사용자
@@ -548,7 +551,7 @@ defmodule AutomataSignal.ErrorHandler do
         # 영구적 오류 처리
         AutomataSignal.Messages.mark_as_failed(message, reason)
         {:error, reason}
-        
+
       :temporary ->
         # 일시적 오류 처리 및 재시도 스케줄링
         message = AutomataSignal.Messages.mark_as_errored(message, reason)
@@ -556,7 +559,7 @@ defmodule AutomataSignal.ErrorHandler do
         {:error, :retry_scheduled}
     end
   end
-  
+
   defp classify_error(reason) do
     cond do
       reason in [:invalid_token, :unregistered, :not_registered] -> :permanent
@@ -565,11 +568,11 @@ defmodule AutomataSignal.ErrorHandler do
       true -> :permanent  # 기본적으로 안전하게 영구적 오류로 처리
     end
   end
-  
+
   defp schedule_retry(message) do
     # Oban 작업으로 재시도 스케줄링 (지수 백오프 적용)
     backoff = get_backoff_for_attempt(message.retry_count || 0)
-    
+
     %{message_id: message.id}
     |> AutomataSignal.Workers.MessageRetryWorker.new(
       queue: :message_retry,
@@ -577,11 +580,11 @@ defmodule AutomataSignal.ErrorHandler do
     )
     |> Oban.insert!()
   end
-  
+
   defp get_backoff_for_attempt(attempt) do
     base = 30
     max_backoff = 60 * 60  # 최대 1시간
-    
+
     backoff = base * :math.pow(2, attempt)
     min(backoff, max_backoff)
   end
@@ -593,12 +596,14 @@ end
 메시지 처리 흐름의 모니터링 포인트:
 
 1. **처리량 지표**:
+
    - 초당 생성된 메시지 수
    - 초당 처리된 메시지 수
    - 작업 큐 길이
    - 처리 지연 시간
 
 2. **상태 비율 지표**:
+
    - 성공/실패/오류 메시지 비율
    - 채널별 전송 성공률
    - 도달률 및 전환율
@@ -638,6 +643,6 @@ end
 
 ## 변경 이력
 
-| 버전 | 날짜 | 변경 내용 | 작성자 |
-| --- | --- | --- | --- |
-| 1.0 | 2025-04-02 | 최초 문서 작성 | 메시징 플랫폼팀 |
+| 버전 | 날짜       | 변경 내용      |
+| ---- | ---------- | -------------- |
+| 1.0  | 2025-04-02 | 최초 문서 작성 |

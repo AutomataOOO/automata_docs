@@ -36,8 +36,6 @@ const config: Config = {
     ],
   ],
 
-  trailingSlash: false,
-
   markdown: {
     mermaid: true,
   },
