@@ -62,6 +62,7 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} Automata, Inc.`,
     },
     prism: {
+      additionalLanguages: ['dart', 'elixir'],
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
