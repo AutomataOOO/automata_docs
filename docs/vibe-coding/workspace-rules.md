@@ -30,8 +30,8 @@
 
 - 초점: 지정된 코드만 수정하고, 다른 부분은 그대로 두세요.
 - 단계: 큰 작업을 단계로 나누고, 각 단계 후에는 승인을 기다리세요.
-- 계획: 큰 변경 전에는 설계 및 작업개요 문서 [이슈명]\_design.md 와 구현 계획 문서 [이슈명]\_plan.md를 작성하고 확인을 기다리세요.
-- 추적: 완료된 작업은 progress.md에 기록하고, 다음 단계는 TODO.txt에 기록하세요.
+- 계획: 큰 변경 전에는 설계 및 작업개요 문서 `../6-planning/[이슈명]_design.md`와 구현 계획 문서 `../6-planning/[이슈명]_plan.md`를 작성하고 확인을 기다리세요.
+- 추적: 완료된 작업은 `../6-planning/progress.md`에 기록하고, 다음 단계는 `../6-planning/TODO.txt`에 기록하세요.
 
 ### 고급 워크플로우
 
@@ -63,13 +63,40 @@
 
 ### Umbrella 앱 구조
 
-- **automata/** - Elixir Umbrella 프로젝트 루트
+- **/** - Elixir Umbrella 프로젝트 루트
   - **docs/** - 프로젝트 문서
-    - **architecture/** - 시스템 아키텍처 설계 문서
-    - **guides/** - 개발자 가이드 및 튜토리얼
-    - **runbooks/** - 운영 매뉴얼 및 장애 복구 절차
-    - **components/** - 컴포넌트별 상세 문서
-    - **api/** - API 명세 및 사용 예제
+    - **automata-signal/**
+      - **README.md** - 프로젝트 개요
+      - **1-guides/** - 개발자 가이드
+        - **getting-started.md** - 시작하기 가이드
+        - **development-workflow.md** - 개발 워크플로우
+        - **coding-standards.md** - 코딩 표준 가이드
+        - **workspace-rules.md** - 작업 규칙 (이 문서)
+      - **2-designs/** - 시스템 설계
+        - **architecture-overview.md** - 아키텍처 개요
+        - **system-architecture.md** - 상세 시스템 아키텍처
+        - **data-model.md** - 데이터 모델
+        - **deployment.md** - 배포 구조
+      - **3-components/** - 컴포넌트
+        - **template-engine.md** - 템플릿 엔진
+        - **adapters.md** - 어댑터 시스템
+        - **messaging.md** - 메시징 시스템
+      - **4-sequences/** - 시퀀스
+        - **initialization.md** - 초기화 시퀀스
+        - **message-processing.md** - 메시지 처리 시퀀스
+        - **lifecycle.md** - 라이프사이클 시퀀스
+        - **campaign-management.md** - 캠페인 관리 시퀀스
+      - **5-references/** - 참조 자료
+        - **api.md** - API 참조
+        - **status-codes.md** - 상태 코드
+        - **error-codes.md** - 오류 코드
+        - **glossary.md** - 용어집
+      - **6-planning/** - 프로젝트 계획
+        - **requirements.md** - 요구사항
+        - **roadmap.md** - 로드맵
+        - **issues.md** - 이슈 추적
+        - **progress.md** - 진행 상황
+        - **TODO.txt** - 할 일 목록
   - **apps/** - Umbrella 하위 애플리케이션
     - **automata_signal/** - 통합 메시징 서비스 앱
       - **lib/** - 소스 코드
