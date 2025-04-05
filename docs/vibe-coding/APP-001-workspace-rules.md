@@ -1,4 +1,4 @@
-# Workspace rules - Automata-Signal
+# [APP-001] Workspace rules
 
 ## 1️⃣ 기술 스택 - "이 도구들을 사용하세요"
 
@@ -68,35 +68,12 @@
     - **automata-signal/**
       - **README.md** - 프로젝트 개요
       - **1-guides/** - 개발자 가이드
-        - **getting-started.md** - 시작하기 가이드
-        - **development-workflow.md** - 개발 워크플로우
-        - **coding-standards.md** - 코딩 표준 가이드
-        - **workspace-rules.md** - 작업 규칙 (이 문서)
       - **2-designs/** - 시스템 설계
-        - **architecture-overview.md** - 아키텍처 개요
-        - **system-architecture.md** - 상세 시스템 아키텍처
-        - **data-model.md** - 데이터 모델
-        - **deployment.md** - 배포 구조
       - **3-components/** - 컴포넌트
-        - **template-engine.md** - 템플릿 엔진
-        - **adapters.md** - 어댑터 시스템
-        - **messaging.md** - 메시징 시스템
       - **4-sequences/** - 시퀀스
-        - **initialization.md** - 초기화 시퀀스
-        - **message-processing.md** - 메시지 처리 시퀀스
-        - **lifecycle.md** - 라이프사이클 시퀀스
-        - **campaign-management.md** - 캠페인 관리 시퀀스
       - **5-references/** - 참조 자료
-        - **api.md** - API 참조
-        - **status-codes.md** - 상태 코드
-        - **error-codes.md** - 오류 코드
-        - **glossary.md** - 용어집
       - **6-planning/** - 프로젝트 계획
-        - **requirements.md** - 요구사항
-        - **roadmap.md** - 로드맵
-        - **issues.md** - 이슈 추적
-        - **progress.md** - 진행 상황
-        - **TODO.txt** - 할 일 목록
+      - **7-progress/** - 프로젝트 진행
   - **apps/** - Umbrella 하위 애플리케이션
     - **automata_signal/** - 통합 메시징 서비스 앱
       - **lib/** - 소스 코드
