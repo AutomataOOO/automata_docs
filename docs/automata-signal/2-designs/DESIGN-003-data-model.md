@@ -24,10 +24,191 @@
 
 ## 1. 개념적 데이터 모델
 
+### 1.1 개체 관계 다이어그램
+
 Automata-Signal 시스템의 핵심 데이터 모델을 개체-관계 다이어그램으로 표현합니다:
 
 ```mermaid
 erDiagram
+    APPLICATION ||--o{ USER : "has"
+    APPLICATION ||--o{ SUBSCRIPTION : "has"
+    APPLICATION ||--o{ MESSAGE : "sends"
+    APPLICATION ||--o{ SUBSCRIPTION_EVENT : "has"
+    APPLICATION ||--o{ MESSAGE_QUOTA : "has"
+    APPLICATION ||--o{ MESSAGE_TEMPLATE : "has"
+    APPLICATION ||--o{ MESSAGE_CAMPAIGN : "has"
+    USER ||--o{ SUBSCRIPTION : "has"
+    USER ||--o{ MESSAGE : "receives"
+    SUBSCRIPTION ||--o{ MESSAGE : "receives"
+    MESSAGE ||--o{ MESSAGE_EVENT : "generates"
+    USER ||--o{ SUBSCRIPTION_EVENT : "has"
+    SUBSCRIPTION ||--o{ SUBSCRIPTION_EVENT : "has"
+    MESSAGE_TEMPLATE ||--o{ MESSAGE_CAMPAIGN : "used_by"
+    MESSAGE_CAMPAIGN ||--o{ MESSAGE : "generates"
+```
+
+### 1.2 상세 ERD
+
+시스템의 주요 엔티티와 모든 필드를 포함한 상세 ERD입니다:
+
+```mermaid
+erDiagram
+    APPLICATION {
+        uuid id PK
+        string name
+        string api_key
+        jsonb settings
+        datetime created_at
+        datetime updated_at
+        boolean is_active
+    }
+
+    USER {
+        uuid id PK
+        string external_id
+        uuid application_id FK
+        datetime created_at
+        datetime last_active_at
+        boolean is_archived
+        datetime archived_at
+    }
+    %% Note: (external_id, application_id) must be unique
+
+    SUBSCRIPTION {
+        uuid id PK
+        string token
+        enum type
+        uuid user_id FK
+        uuid application_id FK
+        string device_model
+        string device_os
+        string device_language
+        string app_version
+        string sdk_version
+        string country_code
+        integer test_type
+        jsonb tags
+        integer subscription_status
+        datetime subscribed_at
+        datetime unsubscribed_at
+        datetime last_active_at
+        int total_messages_received
+        int total_messages_converted
+        boolean is_archived
+        datetime archived_at
+    }
+
+    MESSAGE {
+        uuid id PK
+        string title
+        string body
+        jsonb data
+        uuid user_id FK
+        uuid subscription_id FK
+        uuid application_id FK
+        uuid campaign_id FK
+        enum status
+        enum channel_type
+        datetime created_at
+        datetime updated_at
+        datetime sent_at
+        datetime received_at
+        datetime converted_at
+        datetime failed_at
+        string error_reason
+        jsonb error_details
+        jsonb version_history
+    }
+
+    MESSAGE_EVENT {
+        uuid id PK
+        uuid message_id FK
+        enum event_type
+        datetime occurred_at
+        jsonb metadata
+        jsonb version_history
+    }
+
+    SUBSCRIPTION_EVENT {
+        uuid id PK
+        uuid user_id FK
+        uuid subscription_id FK
+        uuid application_id FK
+        enum event_type
+        string channel
+        string source
+        string reason
+        datetime occurred_at
+    }
+
+    MESSAGE_TEMPLATE {
+        uuid id PK
+        uuid application_id FK
+        string name
+        string title_template
+        string body_template
+        jsonb data_template
+        string description
+        datetime created_at
+        datetime updated_at
+        boolean is_active
+        int version
+    }
+
+    MESSAGE_CAMPAIGN {
+        uuid id PK
+        uuid application_id FK
+        uuid template_id FK
+        string name
+        string title
+        string body
+        jsonb data
+        enum campaign_type
+        datetime scheduled_at
+        datetime created_at
+        datetime updated_at
+        datetime sent_at
+        string created_by
+        jsonb targeting_criteria
+        int total_recipients
+        int successful_count
+        int failed_count
+        enum status
+    }
+
+    MESSAGE_QUOTA {
+        uuid id PK
+        uuid application_id FK
+        int daily_quota
+        int monthly_quota
+        int daily_used
+        int monthly_used
+        datetime reset_date
+        decimal unit_price
+        decimal credit_balance
+        string billing_currency
+    }
+
+    OBAN_JOBS {
+        bigserial id PK
+        string state
+        string queue
+        string worker
+        jsonb args
+        jsonb[] errors
+        int attempt
+        int max_attempts
+        datetime inserted_at
+        datetime scheduled_at
+        datetime completed_at
+        datetime attempted_at
+        datetime cancelled_at
+        datetime discarded_at
+        int priority
+        string[] tags
+        jsonb meta
+    }
+
     APPLICATION ||--o{ USER : "has"
     APPLICATION ||--o{ SUBSCRIPTION : "has"
     APPLICATION ||--o{ MESSAGE : "sends"
@@ -1703,18 +1884,3 @@ defmodule AutomataSignal.Services.CampaignService do
   end
 end
 ```
-
-## 10. 결론
-
-Automata-Signal의 데이터 모델은 확장성, 성능, 보안을 고려하여 설계되었습니다. Ash Framework의 강력한 기능과 PostgreSQL의 안정성을 결합하여 다양한 메시징 채널을 지원하는 통합 시스템을 구현합니다.
-
-주요 특징:
-
-1. **모듈화된 리소스**: 명확한 책임 분리와 관계 정의
-2. **확장 가능한 설계**: 새로운 채널 및 기능 추가를 위한 유연한 구조
-3. **성능 최적화**: 인덱싱, 파티셔닝, 배치 처리 전략
-4. **보안 강화**: 민감 데이터 암호화 및 접근 제어
-5. **풍부한 상태 관리**: 메시지 및 구독 상태의 명확한 추적
-6. **이력 관리**: 변경 이력 및 이벤트 추적
-
-이러한 데이터 모델 설계는 Automata-Signal이 초당 10만 건의 메시지를 처리하는 고성능 메시징 플랫폼으로 작동할 수 있도록 합니다.

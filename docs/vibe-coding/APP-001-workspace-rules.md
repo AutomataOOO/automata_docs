@@ -63,7 +63,7 @@
 
 ### Umbrella 앱 구조
 
-- **/** - Elixir Umbrella 프로젝트 루트
+- **automata/** - Elixir Umbrella 프로젝트 루트
   - **docs/** - 프로젝트 문서
     - **automata-signal/**
       - **README.md** - 프로젝트 개요
