@@ -9,6 +9,8 @@
 - [DESIGN-001] 아키텍처 개요
 - [DESIGN-002] 시스템 아키텍처
 - [DESIGN-003] 데이터 모델
+- [GUIDE-003] AI 주도 개발 워크플로우
+- [GUIDE-005] CI/CD 파이프라인
 - [SEQ-001] 초기화 시퀀스
 - [SEQ-002] 메시지 처리 시퀀스
 
@@ -533,104 +535,42 @@ end
 
 ## 6. CI/CD 파이프라인
 
-### 6.1 GitHub Actions 워크플로우
+### 6.1 CI/CD 파이프라인
 
-지속적 통합 및 배포를 위한 GitHub Actions 구성:
+Automata-Signal은 GitHub Actions를 활용한 지속적 통합 및 배포(CI/CD) 파이프라인을 구현합니다. 이를 통해 코드 품질 검증부터 다중 환경 자동 배포까지 완전 자동화된 워크플로우를 제공합니다.
 
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Automata-Signal
+파이프라인은 다음 주요 단계로 구성됩니다:
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+1. **코드 품질 및 테스트 검증**: 모든 코드 변경에 대해 자동으로 코드 품질 검사 및 테스트 실행
+2. **환경별 자동 배포**: 특정 브랜치에 대한 변경사항을 해당 환경에 자동 배포
+   - 개발(Development): develop 브랜치 변경 시
+   - 스테이징(Staging): 수동 트리거 시
+   - 프로덕션(Production): main 브랜치 변경 시 (리전별 배포)
 
-jobs:
-  test:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: automata_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: '27'
-          elixir-version: '1.18'
-      - uses: actions/cache@v3
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-          restore-keys: |
-            ${{ runner.os }}-mix-
-      - name: Install Dependencies
-        run: mix deps.get
-      - name: Run Tests
-        run: mix test
-
-  deploy:
-    name: Deploy to fly.io
-    needs: test
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        region: [nrt, fra, syd]
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy to ${{ matrix.region }}
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          flyctl deploy --app automata-signal-${{ matrix.region }} --remote-only
-
-  migrations:
-    name: Run Migrations
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Run Migrations
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          flyctl ssh console --app automata-signal-nrt --command "/app/bin/automata eval 'Automata.Release.migrate'"
-```
+프로젝트의 CI/CD 파이프라인 구성에 대한 자세한 내용은 [GUIDE-003] 개발 워크플로우 문서를 참조하세요.
 
 ### 6.2 배포 전략
 
-무중단 배포를 위한 롤링 업데이트 전략:
+Automata-Signal은 무중단 배포를 위한 롤링 업데이트 전략을 채택하고 있습니다:
 
 1. 각 리전의 노드를 한 번에 하나씩 업데이트
 2. 노드 교체 전 상태 점검 및 트래픽 드레이닝
 3. 배포 중 지속적인 상태 모니터링
 4. 문제 발생 시 자동 롤백 수행
 
+fly.toml의 `[deploy]` 섹션에서 `strategy = "rolling"` 설정을 통해 이를 구현합니다.
+
 ### 6.3 환경별 구성
 
-서로 다른 환경을 위한 구성 관리:
+시스템은 다음과 같은 환경 구성을 가집니다:
 
-| 환경     | 애플리케이션 이름               | 목적               |
-| -------- | ------------------------------- | ------------------ |
-| 개발     | automata-signal-dev             | 개발자 테스트      |
-| 스테이징 | automata-signal-staging         | QA 및 통합 테스트  |
-| 프로덕션 | automata-signal-`{nrt,fra,syd}` | 실제 사용자 서비스 |
+| 환경     | 애플리케이션 이름               | 목적               | 구성 파일            |
+| -------- | ------------------------------- | ------------------ | -------------------- |
+| 개발     | automata-signal-dev             | 개발자 테스트      | fly.dev.toml         |
+| 스테이징 | automata-signal-staging         | QA 및 통합 테스트  | fly.staging.toml     |
+| 프로덕션 | automata-signal-`{nrt,fra,syd}` | 실제 사용자 서비스 | fly.prod.{리전}.toml |
+
+각 환경은 독립된 fly.io 앱으로 배포되며, 환경별로 분리된 구성 파일을 통해 설정을 관리합니다.
 
 ### 6.4 비밀 관리
 

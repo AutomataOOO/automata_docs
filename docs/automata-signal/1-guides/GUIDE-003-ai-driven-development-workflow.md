@@ -1,15 +1,15 @@
-# [GUIDE-003] 개발 워크플로우
+# [GUIDE-003] AI 주도 개발 워크플로우
 
-| 버전 | 날짜       | 변경 내용                 |
-| ---- | ---------- | ------------------------- |
-| 1.0  | 2025-04-02 | 최초 문서 작성            |
-| 2.0  | 2025-04-08 | AI 주도 워크플로우로 개선 |
+| 버전 | 날짜       | 변경 내용      |
+| ---- | ---------- | -------------- |
+| 1.0  | 2025-04-02 | 최초 문서 작성 |
 
 ## 관련 문서
 
 - [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
 - [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
 - [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)
+- [[GUIDE-005] CI/CD 파이프라인](../1-guides/GUIDE-005-cicd-pipeline.md)
 
 ## 요약
 
@@ -43,7 +43,7 @@ flowchart LR
 4. **자동 테스트**: 테스트 코드 생성 및 실행
 5. **인간 검토**: 개발자가 결과물 검토 및 피드백 제공
 6. **코드 개선**: 피드백에 따른 자동 코드 개선
-7. **자동 배포**: 승인 후 CI/CD 파이프라인을 통한 자동 배포
+7. **자동 배포**: 승인 후 CI/CD 파이프라인을 통한 자동 배포 (자세한 내용은 [GUIDE-005]를 참조)
 
 ### 1.2 AI와 인간 역할 분담
 
@@ -291,88 +291,16 @@ AI에게 효과적인 피드백을 제공하는 방법:
 4. 영향받는 테스트 업데이트
 5. 변경사항 요약 보고
 
-## 5. CI/CD 및 자동 배포
+## 5. 자동 배포 및 CI/CD 통합
 
-### 5.1 GitHub Actions 자동화
+AI 주도 개발 후 승인된 코드는 자동 CI/CD 파이프라인을 통해 검증되고 배포됩니다:
 
-AI가 구현한 코드는 다음 GitHub Actions 워크플로우를 통해 자동으로 검증 및 배포됩니다:
+1. GitHub 저장소에 변경사항 커밋 및 푸시
+2. GitHub Actions 워크플로우 자동 트리거
+3. 코드 품질 검사, 테스트, 빌드 자동 실행
+4. 검증 성공 시 적절한 환경에 자동 배포
 
-```yaml
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-  workflow_dispatch:
-
-jobs:
-  validate:
-    name: Validate AI Code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: AI Code Quality Check
-        uses: acme/ai-code-validator@v1
-        with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          quality_threshold: 85
-
-  test:
-    name: Build and Test
-    needs: validate
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:17
-        # ... 설정 ...
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        # ... 설정 ...
-      - name: Install dependencies
-        run: mix deps.get
-      - name: Run tests with coverage
-        run: mix coveralls
-
-  deploy:
-    name: Deploy to fly.io
-    needs: [validate, test]
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      # ... 배포 설정 ...
-```
-
-### 5.2 자동 배포 환경
-
-AI 생성 코드는 승인 후 다음 환경으로 자동 배포됩니다:
-
-1. **개발(development)**: `develop` 브랜치 병합 시
-
-   - URL: `https://dev.automata-signal.fly.dev`
-   - 목적: 개발자 테스트 및 통합 검증
-
-2. **스테이징(staging)**: 수동 승인 후
-
-   - URL: `https://staging.automata-signal.fly.dev`
-   - 목적: QA 및 사용자 인수 테스트
-
-3. **프로덕션(production)**: `main` 브랜치 병합 시
-   - URL: `https://automata-signal.fly.dev`
-   - 목적: 실제 사용자 서비스
-
-### 5.3 배포 후 검증
-
-AI는 배포 후 다음 검증을 자동으로 수행합니다:
-
-1. **스모크 테스트**: 핵심 API 및 기능 가용성 확인
-2. **성능 모니터링**: 응답 시간 및 리소스 사용량 추적
-3. **오류 모니터링**: 예외 및 오류 로그 분석
-4. **롤백 기준**: 자동 롤백 트리거 조건 모니터링
+CI/CD 파이프라인의 상세 구성 및 작동 방식은 [GUIDE-005] CI/CD 파이프라인 문서를 참조하세요.
 
 ## 6. AI 주도 개발의 작업 유형별 가이드
 

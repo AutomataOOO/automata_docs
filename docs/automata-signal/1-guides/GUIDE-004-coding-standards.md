@@ -8,7 +8,8 @@
 
 - [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
 - [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
-- [[GUIDE-003] 개발 워크플로우](../1-guides/GUIDE-003-development-workflow.md)
+- [[GUIDE-003] AI 주도 개발 워크플로우](../1-guides/GUIDE-003-ai-driven-development-workflow.md)
+- [[GUIDE-005] CI/CD 파이프라인](../1-guides/GUIDE-005-cicd-pipeline.md)
 
 ## 요약
 
@@ -789,63 +790,55 @@ end
 
 ### 9.1 정적 분석 도구
 
+프로젝트에서는 다음과 같은 코드 품질 도구를 사용합니다:
+
 - **Credo**: Elixir 코드 스타일 및 일관성 검사
 - **Dialyxir**: 타입 검사
 - **Sobelow**: 보안 취약점 분석
+- **ExCoveralls**: 테스트 커버리지 측정 및 보고
 - **dart_code_metrics**: Flutter/Dart 코드 품질 검사
 
 ### 9.2 설정 방법
 
+다음과 같이 `mix.exs` 파일에 설정합니다:
+
 ```elixir
-# mix.exs
 defp deps do
   [
     {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
     {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
     {:sobelow, "~> 0.11", only: [:dev, :test], runtime: false},
-    # ...
+    {:excoveralls, "~> 0.14", only: :test},
+    # ... 기타 의존성
+  ]
+end
+
+def project do
+  [
+    # ... 기타 설정
+    test_coverage: [tool: ExCoveralls],
+    preferred_cli_env: [
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.post": :test,
+      "coveralls.html": :test,
+      "coveralls.github": :test
+    ]
   ]
 end
 ```
 
 ### 9.3 CI 통합
 
-- GitHub Actions 또는 다른 CI 시스템에서 코드 품질 검사를 자동화합니다.
-- PR 머지 전에 코드 품질 검사를 필수로 합니다.
+코드 품질 도구는 로컬 개발 환경뿐만 아니라 CI 환경에서도 자동으로 실행되어야 합니다. 지속적 통합을 통해 모든 변경사항에 대해 품질 검사를 수행합니다:
 
-```yaml
-# .github/workflows/code_quality.yml
-name: Code Quality
+- 코드 형식 검사: `mix format --check-formatted`
+- 코드 스타일 및 일관성 검사: `mix credo --strict`
+- 타입 검사: `mix dialyxir`
+- 보안 취약점 분석: `mix sobelow --config`
+- 테스트 커버리지 측정: `mix coveralls.github`
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  credo:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: '25'
-          elixir-version: '1.14'
-      - run: mix deps.get
-      - run: mix credo --strict
-
-  dialyzer:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: erlef/setup-beam@v1
-        with:
-          otp-version: '25'
-          elixir-version: '1.14'
-      - run: mix deps.get
-      - run: mix dialyzer
-```
+프로젝트의 CI/CD 파이프라인 구성 및 GitHub Actions 워크플로우에 대한 자세한 내용은 [GUIDE-003] 개발 워크플로우 문서를 참조하세요.
 
 ## 10. 리팩토링 가이드라인
 
