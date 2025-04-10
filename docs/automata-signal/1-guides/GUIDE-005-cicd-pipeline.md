@@ -340,11 +340,11 @@ deploy_production:
 
 각 환경은 별도의 구성 파일을 사용합니다:
 
-| 환경     | 구성 파일              | 애플리케이션 이름        |
-| -------- | ---------------------- | ------------------------ |
-| 개발     | fly.dev.toml           | automata-signal-dev      |
-| 스테이징 | fly.staging.toml       | automata-signal-staging  |
-| 프로덕션 | fly.prod.{region}.toml | automata-signal-{region} |
+| 환경     | 구성 파일                | 애플리케이션 이름          |
+| -------- | ------------------------ | -------------------------- |
+| 개발     | fly.dev.toml             | automata-signal-dev        |
+| 스테이징 | fly.staging.toml         | automata-signal-staging    |
+| 프로덕션 | fly.prod.`{region}`.toml | automata-signal-`{region}` |
 
 ### 4.3 환경 승인 프로세스
 
