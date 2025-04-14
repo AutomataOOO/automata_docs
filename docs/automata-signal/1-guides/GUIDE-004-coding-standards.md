@@ -4,13 +4,6 @@
 | ---- | ---------- | -------------- |
 | 1.0  | 2025-04-02 | 최초 문서 작성 |
 
-## 관련 문서
-
-- [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
-- [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
-- [[GUIDE-003] AI 주도 개발 워크플로우](../1-guides/GUIDE-003-ai-driven-development-workflow.md)
-- [[GUIDE-005] CI/CD 파이프라인](../1-guides/GUIDE-005-cicd-pipeline.md)
-
 ## 요약
 
 본 문서는 Automata-Signal 프로젝트의 코딩 표준과 가이드라인을 정의합니다. 코드의 일관성, 가독성, 유지보수성을 높이기 위한 규칙과 권장사항을 제공합니다.

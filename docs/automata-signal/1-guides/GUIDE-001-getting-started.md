@@ -4,12 +4,6 @@
 | ---- | ---------- | -------------- |
 | 1.0  | 2025-04-02 | 최초 문서 작성 |
 
-## 관련 문서
-
-- [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
-- [[GUIDE-003] 개발 워크플로우](../1-guides/GUIDE-003-development-workflow.md)
-- [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)
-
 ## 요약
 
 본 문서는 Automata-Signal 프로젝트의 개발 환경 구축을 위한 단계별 가이드를 제공합니다. Elixir Umbrella 프로젝트 생성부터 Ash Framework 설치, 그리고 기본 구성까지의 과정을 포함합니다.
@@ -133,17 +127,7 @@ iex -S mix phx.server
 - `mix deps.unlock --all` 명령으로 의존성 잠금 해제 후 `mix deps.get`을 다시 실행
 - 최신 Hex 패키지를 사용 중인지 확인: `mix local.hex`
 
-## 6. 다음 단계
-
-개발 환경 구축이 완료되었다면, 다음 단계로 진행하세요:
-
-1. [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)를 통해 코드베이스의 전체적인 구성과 주요 컴포넌트를 이해하기
-2. [[GUIDE-003] 개발 워크플로우](../1-guides/GUIDE-003-development-workflow.md)를 검토하여 일상적인 개발 작업 방법 이해하기
-3. [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)을 검토하여 프로젝트의 코딩 규칙 익히기
-4. 시스템 아키텍처 문서 검토하기: [[DESIGN-001] 아키텍처 개요](../2-designs/DESIGN-001-architecture-overview.md), [[DESIGN-002] 시스템 아키텍처](../2-designs/DESIGN-002-system-architecture.md)
-5. 첫 번째 기능 개발을 위한 메시지 처리 시퀀스 이해하기: [[SEQ-002] 메시지 처리 시퀀스](../4-sequences/SEQ-002-message-processing.md)
-
-## 7. 참고 자료
+## 6. 참고 자료
 
 - [Elixir 공식 문서](https://elixir-lang.org/docs.html)
 - [Phoenix Framework 가이드](https://hexdocs.pm/phoenix/overview.html)

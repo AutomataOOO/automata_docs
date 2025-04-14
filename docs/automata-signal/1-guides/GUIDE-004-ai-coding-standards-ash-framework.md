@@ -2,15 +2,7 @@
 
 | 버전 | 날짜       | 변경 내용      |
 | ---- | ---------- | -------------- |
-| 1.0  | 2025-04-10 | 최초 문서 작성 |
-
-## 관련 문서
-
-- [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
-- [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
-- [[GUIDE-003] AI 주도 개발 워크플로우](../1-guides/GUIDE-003-ai-driven-development-workflow.md)
-- [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)
-- [[GUIDE-005] CI/CD 파이프라인](../1-guides/GUIDE-005-cicd-pipeline.md)
+| 1.0  | 2025-04-02 | 최초 문서 작성 |
 
 ## 요약
 
@@ -18,9 +10,8 @@
 
 ## 대상 독자
 
-- 개발자
-- AI 코딩 에이전트
-- 시스템 아키텍트
+- 신규 개발자
+- 개발팀
 
 ## 1. 에이전트 지침
 

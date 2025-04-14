@@ -4,12 +4,6 @@
 | ---- | ---------- | -------------- |
 | 1.0  | 2025-04-02 | 최초 문서 작성 |
 
-## 관련 문서
-
-- [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
-- [[GUIDE-003] 개발 워크플로우](../1-guides/GUIDE-003-development-workflow.md)
-- [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)
-
 ## 요약
 
 본 문서는 Automata-Signal 프로젝트의 전체 디렉토리 구조와 주요 구성 요소에 대한 설명을 제공합니다. 개발자가 프로젝트 구조를 이해하고 필요한 파일을 빠르게 찾을 수 있도록 도움을 줍니다.
@@ -355,5 +349,3 @@ mix new my_new_app --sup
 
 - **루트 디렉토리에서 작업하기**: 대부분의 mix 명령은 루트 디렉토리에서 실행하는 것이 좋습니다. 이렇게 하면 모든 앱에 명령이 적용됩니다.
 - **앱별 작업**: 특정 앱에서만 작업하려면 해당 앱 디렉토리로 이동한 후 명령을 실행합니다.
-- **이슈 추적**: 작업 중인 이슈를 추적하려면 `docs/automata-signal/7-progress/status.md` 파일을 참조하세요.
-- **설계 문서 검토**: 구현 전에 `docs/automata-signal/2-designs/` 디렉토리의 설계 문서를 검토하세요.

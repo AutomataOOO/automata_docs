@@ -2,14 +2,7 @@
 
 | 버전 | 날짜       | 변경 내용      |
 | ---- | ---------- | -------------- |
-| 1.0  | 2025-04-10 | 최초 문서 작성 |
-
-## 관련 문서
-
-- [[GUIDE-001] 시작하기](../1-guides/GUIDE-001-getting-started.md)
-- [[GUIDE-002] 프로젝트 구조](../1-guides/GUIDE-002-project-structure.md)
-- [[GUIDE-003] AI 주도 개발 워크플로우](../1-guides/GUIDE-003-ai-driven-development-workflow.md)
-- [[GUIDE-004] 코딩 표준](../1-guides/GUIDE-004-coding-standards.md)
+| 1.0  | 2025-04-02 | 최초 문서 작성 |
 
 ## 요약
 
@@ -17,9 +10,8 @@
 
 ## 대상 독자
 
-- 개발자
-- DevOps 엔지니어
-- 시스템 운영자
+- 신규 개발자
+- 개발팀
 
 ## 1. CI/CD 파이프라인 개요
 
