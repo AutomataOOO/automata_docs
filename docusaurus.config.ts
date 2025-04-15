@@ -36,6 +36,8 @@ const config: Config = {
     ],
   ],
 
+  plugins: ['docusaurus-plugin-llms-txt'],
+
   markdown: {
     mermaid: true,
   },
