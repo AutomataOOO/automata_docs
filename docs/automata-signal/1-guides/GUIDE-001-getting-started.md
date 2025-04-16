@@ -130,9 +130,8 @@ iex -S mix phx.server
 ## 6. 참고 자료
 
 - [Elixir 공식 문서](https://elixir-lang.org/docs.html)
-- [Phoenix Framework 가이드](https://hexdocs.pm/phoenix/overview.html)
-- [Ash Framework 시작하기 가이드](https://hexdocs.pm/ash/get-started.html)
-- [Ash Phoenix 문서](https://hexdocs.pm/ash_phoenix/AshPhoenix.html)
-- [Ash JSON API 문서](https://hexdocs.pm/ash_json_api/AshJsonApi.html)
-- [Ash Postgres 문서](https://hexdocs.pm/ash_postgres/AshPostgres.html)
-- [Oban 문서](https://hexdocs.pm/oban/Oban.html)
+- [Phoenix 문서](https://hexdocs.pm/phoenix)
+- [Ash 문서](https://hexdocs.pm/ash)
+- [AshPhoenix 문서](https://hexdocs.pm/ash_phoenix)
+- [AshJsonApi 문서](https://hexdocs.pm/ash_json_api)
+- [AshPostgres 문서](https://hexdocs.pm/ash_postgres)

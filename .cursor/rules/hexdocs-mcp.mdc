@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: When working with any resources that require hex docs.
+globs:
+alwaysApply: false
+---
+
+When working with Elixir projects that use Hex packages:
+
+## HexDocs MCP Workflow
+
+1. Use `search` to find relevant documentation
+2. Use `fetch` to fetch documentation for a package
