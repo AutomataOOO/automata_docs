@@ -65,7 +65,7 @@ Automata 시스템은 다음과 같은 애플리케이션 구조를 가지고 �
 - 여러 앱이 함께 단일 유닛으로 배포됨
 - 각 앱의 모듈성과 관심사 분리를 유지하면서도 실행 시 통합된 시스템으로 작동
 
-자세한 배포 및 운영 관련 내용은 [[DESIGN-004] 운영 아키텍처](../2-designs/DESIGN-004-operational-architecture) 문서를 참조하세요.
+자세한 배포 및 운영 관련 내용은 [[DESIGN-004] 운영 아키텍처](../designs/DESIGN-004-operational-architecture) 문서를 참조하세요.
 
 ## 4. 애플리케이션 간 상호작용
 
