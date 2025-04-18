@@ -11,7 +11,7 @@
 - [[DESIGN-004] 운영 아키텍처](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/designs/DESIGN-004-operational-architecture)
 - [[DESIGN-005] 어드민 유저 시나리오](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/designs/DESIGN-005-admin-user-scenarios)
 - [[GUIDE-001] 시작하기](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-001-getting-started)
-- [[GUIDE-002] 프로젝트 구조](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-002-project-structure)
+- [[GUIDE-002] Automata 시스템 구조](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-002-project-structure)
 - [[GUIDE-003] AI 주도 개발 워크플로우](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-003-ai-driven-development-workflow)
 - [[GUIDE-006] AI 코딩 표준: Ash Framework](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-004-ai-coding-standards-ash-framework)
 - [[GUIDE-004] 코딩 표준](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/guides/GUIDE-004-coding-standards)
