@@ -632,9 +632,3 @@ deploy_qa:
 - [Credo 문서](https://github.com/rrrene/credo)
 - [Dialyxir 문서](https://github.com/jeremyjh/dialyxir)
 - [Sobelow 문서](https://github.com/nccgroup/sobelow)
-
-## 13. 관련 문서
-
-- [DESIGN-004] 운영 아키텍처 - 배포 인프라 구조에 대한 상세 정보
-- [GUIDE-003] 개발 워크플로우 - AI 주도 개발과 CI/CD 통합 방법
-- [GUIDE-004] 코딩 표준 - 코드 품질 도구 설정 및 사용 방법

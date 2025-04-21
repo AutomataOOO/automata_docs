@@ -407,7 +407,7 @@ end
 - **ash_postgres**: https://hexdocs.pm/ash_postgres/
 - **ash_state_machine**: https://hexdocs.pm/ash_state_machine/
 - **ash_oban**: https://hexdocs.pm/ash_oban/
-- **ash_paper_trail**: https://hexdocs.pm/ash_papertrail/ (Ash 통합)
+- **ash_paper_trail**: https://hexdocs.pm/ash_papertrail/
 - **ash_archival**: https://hexdocs.pm/ash_archival/
 - **ash_cloak**: https://hexdocs.pm/ash_cloak/
 - **ash_money**: https://hexdocs.pm/ash_money/
