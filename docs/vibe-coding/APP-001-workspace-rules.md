@@ -7,14 +7,20 @@
 - 프로젝트 구조: Elixir Umbrella 앱
 - 백엔드: Elixir, Ash Framework
 - Ash Framework 확장 모듈: ash_state_machine, ash_oban, ash_paper_trail, ash_archival, ash_cloak, ash_money, ash_double_entry, ash_csv
-- 데이터베이스: PostgreSQL (Oban 작업 큐 포함)
-- 클라이언트: Flutter
+- 데이터베이스: PostgreSQL (Neon Serverless Postgres)
+- 클라이언트: Flutter (iOS/Android)
 - 멀티채널 지원:
   - 푸시 알림: Pigeon (FCM/APNS 클라이언트)
   - 이메일: Swoosh (지원 예정)
   - SMS: 다양한 SMS 게이트웨이 (지원 예정)
   - 카카오 알림톡: 카카오 비즈니스 API (지원 예정)
   - 인앱 메시지: SDK 내장 컴포넌트 (지원 예정)
+- 테스트:
+  - Credo: Elixir 코드 스타일 및 일관성 검사
+  - Dialyxir: 타입 검사
+  - Sobelow: 보안 취약점 분석
+  - ExCoveralls: 테스트 커버리지 측정 및 보고
+  - dart_code_metrics: Flutter/Dart 코드 품질 검사
 - 배포: fly.io (글로벌 분산 배포)
 
 ### 추가 정보
@@ -30,8 +36,8 @@
 
 - 초점: 지정된 코드만 수정하고, 다른 부분은 그대로 두세요.
 - 단계: 큰 작업을 단계로 나누고, 각 단계 후에는 승인을 기다리세요.
-- 계획: 큰 변경 전에는 설계 및 작업개요 문서 `../progress/[이슈명]_design.md`와 구현 계획 문서 `../progress/[이슈명]_plan.md`를 작성하고 확인을 기다리세요.
-- 추적: 작업 진행 상황, 완료된 작업, 그리고 앞으로 진행할 작업 항목을 `../progress/status.md` 파일에 기록하세요. 각 작업 항목에는 상태(완료/진행중/예정)를 명확히 표시하세요.
+- 계획: 큰 변경 전에는 설계 및 작업개요 문서 `progress/[작업명]_design.md`와 구현 계획 문서 `progress/[작업명]_plan.md`를 작성하고 확인을 기다리세요.
+- 추적: 작업 진행 상황, 완료된 작업, 그리고 앞으로 진행할 작업 항목을 `progress/status.md` 파일에 기록하세요. 각 작업 항목에는 상태(완료/진행중/예정)를 명확히 표시하세요.
 
 ### 고급 워크플로우
 
@@ -63,18 +69,18 @@
 
 ### Umbrella 앱 구조
 
-- **automata/** - Elixir Umbrella 프로젝트 루트
-  - **docs/** - 프로젝트 문서
-    - **automata-signal/**
-      - **README.md** - 프로젝트 개요
-      - **guides/** - 개발자 가이드
-      - **designs/** - 시스템 설계
-      - **components/** - 컴포넌트
-      - **sequences/** - 시퀀스
-      - **references/** - 참조 자료
-      - **planning/** - 프로젝트 계획
-      - **progress/** - 프로젝트 진행
+- **/** - Elixir Umbrella 프로젝트 루트
   - **apps/** - Umbrella 하위 애플리케이션
+    - **docs/** - 프로젝트 문서
+      - **automata-signal/**
+        - **README.md** - 프로젝트 개요
+        - **guides/** - 개발자 가이드
+        - **designs/** - 시스템 설계
+        - **components/** - 컴포넌트
+        - **sequences/** - 시퀀스
+        - **references/** - 참조 자료
+        - **planning/** - 프로젝트 계획
+        - **progress/** - 프로젝트 진행
     - **automata_signal/** - 통합 메시징 서비스 앱
       - **lib/** - 소스 코드
         - **automata_signal/** - 비즈니스 로직
@@ -91,7 +97,6 @@
       - **test/** - 단위 및 통합 테스트
       - **client/** - Flutter 모바일 클라이언트
     - **automata_admin/** - 관리자 인터페이스 앱
-    - **automata_analytics/** - 데이터 분석 앱
   - **config/** - Umbrella 공통 설정
 
 ### 명명 규칙
@@ -133,14 +138,3 @@
 - ash_money: 사용량 기반 과금을 위한 비용 추적 시스템을 구현하세요.
 - ash_double_entry: 메시지 할당량 및 사용량을 이중 원장으로 정확하게 추적하세요.
 - ash_csv: 채널별 성과 분석 및 보고서 생성을 위한 CSV 내보내기 기능을 구현하세요.
-
-## 8️⃣ 활용 방법
-
-이 규칙 세트는 AI 지원 개발을 위한 템플릿입니다. 다음과 같이 사용하세요:
-
-1. 프로젝트 시작 시 이 규칙을 참조하세요.
-2. 필요에 따라 규칙을 조정하세요.
-3. AI 모델에게 이 파일의 내용을 따르도록 지시하세요.
-4. 프로젝트를 진행하면서 이 규칙이 어떻게 도움이 되는지 평가하세요.
-
-이 규칙 세트를 통해 AI와의 협업이 더 효율적이고 예측 가능해질 것입니다.
