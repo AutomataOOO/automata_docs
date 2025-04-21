@@ -24,5 +24,7 @@
 - [[SEQ-002] 메시지 처리 시퀀스](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/sequences/SEQ-002-message-processing)
 - [[SEQ-003] 라이프사이클 시퀀스](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/sequences/SEQ-003-lifecycle)
 - [Automata-Signal: 기술 명세서](https:/AutomataOOO.github.io/automata_docs/docs/automata-signal/tech-spec)
+- [AI 문서화 가이드](https:/AutomataOOO.github.io/automata_docs/docs/vibe-coding/ai-documentation-guide)
+- [AI 문서 수명주기 가이드](https:/AutomataOOO.github.io/automata_docs/docs/vibe-coding/ai-documentation-lifecycle-guide)
 - [[APP-000] Global rules](https:/AutomataOOO.github.io/automata_docs/docs/vibe-coding/APP-000-global-rules)
 - [[APP-001] Workspace rules](https:/AutomataOOO.github.io/automata_docs/docs/vibe-coding/APP-001-workspace-rules)
