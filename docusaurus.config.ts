@@ -8,7 +8,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://AutomataOOO.github.io',
-  baseUrl: '/automata_docs/',
+  baseUrl: '/',
 
   organizationName: 'AutomataOOO',
   projectName: 'automata_docs',
